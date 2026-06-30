@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sản Phẩm Sáng Tạo - Kinh Tế Chính Trị</title>
+    <!-- Thư viện hiệu ứng AOS -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <!-- Google Fonts: Hỗ trợ tiếng Việt 100% với độ nét cực cao -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-main: #f4f5f7;
+            --accent-red: #d70015;
+            /* Đỏ Apple chỉn chu */
+            --accent-green: #24b24b;
+            --text-dark: #1d1d1f;
+            --text-muted: #6e6e73;
+            --border-light: rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Đồng bộ Font chữ mượt mà và chuẩn tiếng Việt */
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+
+            /* BACKGROUND SINH ĐỘNG: Lưới Chấm Báo Chí + Các Dải Màu Ambient Loang Nhẹ */
+            background-color: var(--bg-main);
+            background-image:
+                radial-gradient(rgba(0, 0, 0, 0.04) 1.5px, transparent 1.5px),
+                radial-gradient(circle at 90% 10%, rgba(215, 0, 21, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 10% 45%, rgba(36, 178, 75, 0.04) 0%, transparent 45%),
+                radial-gradient(circle at 50% 80%, rgba(215, 0, 21, 0.04) 0%, transparent 50%);
+            background-size: 30px 30px, 100% 100%, 100% 100%, 100% 100%;
+            background-attachment: fixed;
+        }
+
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent-red), #ff9500, var(--accent-green));
+            width: 0%;
+            z-index: 9999;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            font-weight: 900;
+            letter-spacing: -0.03em;
+        }
+
+        p {
+            font-weight: 400;
+            color: #2c2c2e;
+            line-height: 1.75;
+            font-size: 1.15rem;
+            margin-bottom: 16px;
+            text-align: justify;
+        }
+
+        /* Header hoành tráng phong cách tạp chí phẳng */
+        header {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        header .badge {
+            background: var(--text-dark);
+            color: #ffffff;
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            letter-spacing: 0.1em;
+            font-family: 'Be Vietnam Pro', sans-serif;
+        }
+
+        header h1 {
+            font-size: 4.8rem;
+            line-height: 1.15;
+            margin-bottom: 24px;
+            color: var(--text-dark);
+        }
+
+        header h1 span {
+            background: linear-gradient(135deg, var(--accent-red) 30%, #ff4d4d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p {
+            font-size: 1.5rem;
+            max-width: 800px;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .scroll-down {
+            position: absolute;
+            bottom: 40px;
+            font-size: 0.85rem;
+            color: var(--text-dark);
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            animation: bounce 2s infinite;
+        }
+
+        /* Timeline Container & Trục Cơ Khí */
+        .timeline-container {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        /* Trục đường kẻ giữa của timeline */
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: rgba(0, 0, 0, 0.06);
+            transform: translateX(-50%);
+        }
+
+        .station-wrapper {
+            margin-bottom: 160px;
+            position: relative;
+        }
+
+        /* Tag hiển thị mốc thời gian lớn ở giữa */
+        .time-tag {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .time-tag span {
+            background: var(--text-dark);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            font-family: 'Be Vietnam Pro', sans-serif;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Bố cục 2 cột song song */
+        .section-station {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            position: relative;
+        }
+
+        /* Giao diện Thẻ nội dung siêu mịn (Glassmorphism Sáng) */
+        .box {
+            width: 46%;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.03);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Card Lý thuyết màu hồng đỏ nhạt nổi bật */
+        .box-theory {
+            background: rgba(255, 245, 245, 0.9);
+            border: 1px solid rgba(215, 0, 21, 0.1);
+        }
+
+        .station-node {
+            position: absolute;
+            left: 50%;
+            top: 40px;
+            width: 18px;
+            height: 18px;
+            background: white;
+            border: 4px solid var(--accent-red);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            box-shadow: 0 0 10px rgba(215, 0, 21, 0.2);
+        }
+
+        .box-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            font-weight: 700;
+            display: block;
+        }
+
+        .box-theory .box-label {
+            color: var(--accent-red);
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+            font-weight: 800;
+            line-height: 1.3;
+        }
+
+        .highlight-text {
+            color: var(--accent-red);
+            font-weight: 700;
+            background: rgba(215, 0, 21, 0.05);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .quote-box {
+            background: #1d1d1f;
+            padding: 25px;
+            border-radius: 18px;
+            margin-top: 20px;
+        }
+
+        .quote-box p {
+            color: #ffffff;
+            margin-bottom: 0;
+            font-size: 1.05rem;
+            font-weight: 500;
+        }
+
+        /* Apple Grid layout cho Câu 2 */
+        .apple-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .apple-card-high {
+            background: rgba(255, 245, 245, 0.95);
+            border: 2px solid rgba(215, 0, 21, 0.15);
+            padding: 35px;
+            border-radius: 24px;
+            backdrop-filter: blur(10px);
+        }
+
+        .apple-card-high h4 {
+            font-size: 1.3rem;
+            color: var(--accent-red);
+            margin-bottom: 18px;
+        }
+
+        .apple-card-low {
+            background: rgba(245, 251, 247, 0.95);
+            border: 2px solid rgba(36, 178, 75, 0.15);
+            padding: 35px;
+            border-radius: 24px;
+            backdrop-filter: blur(10px);
+        }
+
+        .apple-card-low h4 {
+            font-size: 1.3rem;
+            color: var(--accent-green);
+            margin-bottom: 18px;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        li {
+            position: relative;
+            padding-left: 22px;
+            margin-bottom: 12px;
+            color: #3a3a3c;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            text-align: justify;
+        }
+
+        .apple-card-high li::before {
+            content: "▲";
+            color: var(--accent-red);
+            position: absolute;
+            left: 0;
+            top: 2px;
+            font-size: 0.85rem;
+        }
+
+        .apple-card-low li::before {
+            content: "▼";
+            color: var(--accent-green);
+            position: absolute;
+            left: 0;
+            top: 2px;
+            font-size: 0.85rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+            font-size: 1rem;
+            border-top: 1px solid var(--border-light);
+            background: #ffffff;
+            font-weight: 600;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-6px);
+            }
+
+            60% {
+                transform: translateY(-3px);
+            }
+        }
+
+        @media (max-width: 992px) {
+            .timeline-line {
+                left: 20px;
+                transform: none;
+            }
+
+            .station-node {
+                left: 20px;
+                transform: translateX(-50%);
+                top: -45px;
+            }
+
+            .time-tag {
+                justify-content: flex-start;
+                padding-left: 40px;
+            }
+
+            .section-station {
+                flex-direction: column;
+            }
+
+            .box {
+                width: 100%;
+                margin-left: 40px;
+                margin-bottom: 24px;
+                padding: 30px;
+            }
+
+            header h1 {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- PROGRESS BAR -->
+    <div id="progress-bar"></div>
+
+    <!-- HERO SECTION -->
+    <header>
+        <div data-aos="zoom-out" data-aos-duration="1000">
+            <h1>Đế Chế Số Của <span>Apple</span></h1>
+            <p>Sự vận động độc quyền qua lăng kính Kinh tế Chính trị Mác - Lênin</p>
+        </div>
+    </header>
+
+    <!-- MAIN TIMELINE CONTAINER -->
+    <div class="timeline-container">
+        <div class="timeline-line"></div>
+
+        <!-- MỐC 1 -->
+        <div class="station-wrapper">
+            <div class="time-tag" data-aos="fade-up"><span>GIAI ĐOẠN 1: CẠNH TRANH TỰ DO (2007 - 2012)</span></div>
+            <div class="section-station">
+                <div class="station-node"></div>
+
+                <!-- Cột trái: Câu chuyện Apple thực tế -->
+                <div class="box" data-aos="fade-right">
+                    <span class="box-label">Lịch sử Apple & Thị trường</span>
+                    <h3>Thời kỳ "Quần hùng tranh bá"</h3>
+                    <p>Năm 2007, Apple ra mắt iPhone đầu tiên, chính thức bước chân vào thị trường smartphone sơ khai.
+                        Lúc bấy giờ, thị trường là một sân chơi tự do đúng nghĩa với sự xâu xé thị phần khốc liệt từ
+                        Nokia, BlackBerry, HTC, LG, Sony... Không một ai nắm giữ vị thế độc tôn tuyệt đối.</p>
+                </div>
+
+                <!-- Cột phải: Khớp Script Hùng phần 1 -->
+                <div class="box box-theory" data-aos="fade-left">
+                    <span class="box-label">Lý luận Kinh tế Chính trị</span>
+                    <h3>Sự vận động từ Cạnh tranh tự do</h3>
+                    <p>Trong nền kinh tế tư bản chủ nghĩa, các doanh nghiệp hoạt động trong môi trường cạnh tranh tự do
+                        nhằm giành lợi nhuận, thị trường và nguồn lực sản xuất. Để nâng cao năng lực cạnh tranh, các
+                        doanh nghiệp không ngừng đầu tư đổi mới công nghệ, mở rộng quy mô sản xuất, nâng cao năng suất
+                        lao động và giảm chi phí.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- MỐC 2 -->
+        <div class="station-wrapper">
+            <div class="time-tag" data-aos="fade-up"><span>GIAI ĐOẠN 2: TÍCH TỤ & TẬP TRUNG SẢN XUẤT (2012 -
+                    2020)</span></div>
+            <div class="section-station">
+                <div class="station-node"></div>
+
+                <!-- Cột trái: Câu chuyện Apple thực tế -->
+                <div class="box" data-aos="fade-right">
+                    <span class="box-label">Lịch sử Apple & Thị trường</span>
+                    <h3>Đào thải và Phình to quy mô</h3>
+                    <p>Apple liên tục tích lũy tư bản từ doanh số phần cứng khổng lồ và bắt đầu xây dựng hệ sinh thái
+                        khép kín (iOS, App Store). Các đối thủ lớn một thời như Nokia, BlackBerry lâm vào suy thoái dữ
+                        dội; LG và HTC dần hụt hơi trong cuộc đua công nghệ và buộc phải rút lui hoặc thu hẹp quy mô.
+                    </p>
+                </div>
+
+                <!-- Cột phải: Khớp Script Hùng phần 2 -->
+                <div class="box box-theory" data-aos="fade-left">
+                    <span class="box-label">Lý luận Kinh tế Chính trị</span>
+                    <h3>Sự phân hóa tất yếu</h3>
+                    <p>Trong quá trình cạnh tranh, các doanh nghiệp dần phát triển, mở rộng quy mô, phát triển các mối
+                        quan hệ sản xuất dẫn đến sự vươn lên về mặt kinh tế so với những doanh nghiệp vừa và nhỏ.</p>
+                    <div class="quote-box">
+                        <p>Từ đó diễn ra tích tụ tư bản (doanh nghiệp sử dụng lợi nhuận để mở rộng quy mô sản xuất) và
+                            tập trung tư bản (sáp nhập, hợp nhất hoặc thâu tóm các doanh nghiệp khác). Kết quả là sản
+                            xuất và tư bản ngày càng tập trung vào một số ít doanh nghiệp có quy mô rất lớn. Khi các
+                            doanh nghiệp này chiếm phần lớn thị trường và có khả năng chi phối giá cả, sản lượng hoặc
+                            điều kiện kinh doanh, các tổ chức độc quyền sẽ hình thành..</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MỐC 3 -->
+        <div class="station-wrapper">
+            <div class="time-tag" data-aos="fade-up"><span>GIAI ĐOẠN 3: ĐỘC QUYỀN VÀ TÍNH TẤT YẾU</span></div>
+            <div class="section-station">
+                <div class="station-node"></div>
+
+                <!-- Cột trái: Câu chuyện Apple thực tế -->
+                <div class="box" data-aos="fade-right">
+                    <span class="box-label">Lịch sử Apple & Thị trường</span>
+                    <h3>Thiết lập Đế chế thống trị</h3>
+                    <p>Chiếm giữ thế thượng phong, Apple không chỉ bán thiết bị cá nhân mà chuyển sang độc quyền luật
+                        chơi toàn cầu. Họ biến App Store thành "trạm thu phí" duy nhất trên thiết bị iOS, biến sức mạnh
+                        kỹ thuật ban đầu thành quyền lực khống chế thị trường tuyệt đối.</p>
+                </div>
+
+                <!-- Cột phải: Khớp Script Hùng phần 3 -->
+                <div class="box box-theory" data-aos="fade-left">
+                    <span class="box-label">Lý luận Kinh tế Chính trị</span>
+                    <h3>Tại sao cạnh tranh thắng lợi tất yếu dẫn đến độc quyền?</h3>
+                    <p>Cạnh tranh thắng lợi đồng nghĩa với việc doanh nghiệp chiến thắng có thể mở rộng quy mô, nâng cao
+                        trình độ sản xuất, phát triển công nghệ sản xuất, làm tiền đề cho lần chiến thắng tiếp theo.</p>
+                    <p>Trong quá trình đó, họ lặp lại sự cạnh tranh, tiếp tục mở rộng quy mô trong khi các doanh nghiệp
+                        vừa và nhỏ bị mua lại hoặc phá sản. <span class="highlight-text">Từ đó dẫn đến sản xuất và tư
+                            bản ngày càng tập trung vào một số doanh nghiệp lớn</span>, tạo điều kiện cho sự khống chế
+                        thị trường và hình thành độc quyền.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PHẦN CÂU HỎI 2: GIÁ CẢ ĐỘC QUYỀN -->
+        <div class="part-wrapper" data-aos="fade-up" style="margin-bottom: 0;">
+            <div class="time-tag"><span>BÀI TOÁN KINH TẾ: GIÁ CẢ & LỢI NHUẬN ĐỘC QUYỀN</span></div>
+
+            <div class="box" style="width: 100%; padding: 50px; box-shadow: 0 30px 60px rgba(0,0,0,0.04);">
+                <span class="box-label" style="color: var(--accent-red);">Vận dụng thực tế siêu ngạch</span>
+                <h3 style="font-size: 1.8rem; margin-bottom: 15px;">Apple có đang áp đặt "Giá cả độc quyền" để thu lợi
+                    nhuận không?</h3>
+                <p style="font-size: 1.2rem; font-weight: 600; color: var(--text-dark); margin-bottom: 25px;">Apple đang
+                    áp dụng triệt để lý luận của Lênin về Giá cả độc quyền (Cao và Thấp) để thu về lợi nhuận độc quyền
+                    siêu ngạch.</p>
+
+                <div class="apple-grid">
+                    <!-- Giá cao -->
+                    <div class="apple-card-high" data-aos="fade-right" data-aos-delay="100">
+                        <h4>▲ Giá cả độc quyền cao (Đầu ra - Bán cho người tiêu dùng)</h4>
+                        <ul>
+                            <li>Apple bán iPhone, iPad, MacBook... với giá cực cao, vượt xa chi phí sản xuất thực tế.
+                            </li>
+                            <li><strong>Cơ sở thực hiện:</strong> Nhờ sự độc quyền về hệ sinh thái đóng (iOS) và sức
+                                mạnh thương hiệu độc quyền khiến người dùng khó rời bỏ và chấp nhận mức giá đắt đỏ.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Giá thấp -->
+                    <div class="apple-card-low" data-aos="fade-left" data-aos-delay="200">
+                        <h4>▼ Giá cả độc quyền thấp (Đầu vào - Ép giá đối tác/lao động)</h4>
+                        <ul>
+                            <li><strong>Ép giá linh kiện:</strong> Apple đóng vai trò là kẻ "mua độc quyền", buộc các
+                                nhà cung ứng (Foxconn, Samsung Display...) phải hạ giá linh kiện đến mức tối đa để nhận
+                                đơn hàng khổng lồ.</li>
+                            <li><strong>Ép giá chất xám (Apple Tax):</strong> Đánh thuế hoa hồng 30% lên các nhà phát
+                                triển ứng dụng trên App Store. Lập trình viên buộc phải chấp nhận vì Apple độc quyền
+                                cổng tiếp cận người dùng iOS.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>© 2026 • Môn Kinh tế Chính trị Mác - Lênin • FPT University</p>
+    </footer>
+
+    <!-- Khởi chạy hiệu ứng cuộn trang mượt mà -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            easing: 'ease-out-cubic',
+            once: true
+        });
+
+        // Xử lý thanh tiến trình tiến độ cuộn chuột trên đầu trang
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progress-bar').style.width = scrolled + '%';
+        });
+    </script>
+</body>
+
+</html>
